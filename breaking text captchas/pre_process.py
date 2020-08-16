@@ -1,6 +1,6 @@
 # pre_process.py
 # August 2020
-# Experimenting with extracting character from a captcha image
+# Experimenting with extracting characters from a captcha image
 
 
 #####################################
@@ -27,12 +27,12 @@ from imutils import paths
 import cv2
 import os
 
-dataset = "assets"
+dataset = "captchas"
 HXW = 24
 data = []
 labels = []
 img_paths = sorted(list(paths.list_images(dataset)))
-itr = 0
+img_show = False
 
 # Load each original captcha
 for img_path in img_paths:
@@ -42,15 +42,18 @@ for img_path in img_paths:
     digits = list(filename)
     # Extract each char from the captcha
     img = cv2.imread(img_path)
-    cv2.imshow(filename_cpy, img)
-    cv2.waitKey(0)
+    if img_show:
+        cv2.imshow(filename_cpy, img)
+        cv2.waitKey(0)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    cv2.imshow("gray scale", img)
-    cv2.waitKey(0)
+    if img_show:
+        cv2.imshow("gray scale", img)
+        cv2.waitKey(0)
     img = cv2.threshold(img, 0, 255,
         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    cv2.imshow("threshold", img)
-    cv2.waitKey(0)
+    if img_show:
+        cv2.imshow("threshold", img)
+        cv2.waitKey(0)
     contours = cv2.findContours(img.copy(),
         cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0]
@@ -70,8 +73,9 @@ for img_path in img_paths:
         box = img[y-2:y+h+2, x-2:x+w+2]
         tmp_data.append(box)
         tmp_labels.append(digit)
-        cv2.imshow(digit, box)
-        cv2.waitKey(0)
+        if img_show:
+            cv2.imshow(digit, box)
+            cv2.waitKey(0)
     if len(tmp_data) != 4:
         continue
     for (img, label) in zip(tmp_data, tmp_labels):
@@ -80,9 +84,8 @@ for img_path in img_paths:
 
 print(len(data))
 print(len(labels))
-#for (img, label) in zip(data, labels):
-    #cv2.imshow(label, img)
-    #cv2.waitKey(0)
 
 
 
+
+#

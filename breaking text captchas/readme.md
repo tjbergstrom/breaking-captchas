@@ -1,14 +1,17 @@
-This has been done before (there's a reason you don't see these much anymore), just want to see how I would do it. 
+This has been done before (there's a reason you don't see these much anymore), just want to see how I would implement it. 
 
 1. Data collection. Need lots of labeled captchas. There are/were about 30 different types of text based captchas used by different
 websites. Maybe start with just one type.
 
 2. How to extract characters from a captcha.
 
+input with label in filename
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss1.png)
 
+threshold
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss2.png)
 
+find contours, get label from filename
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss3.png)
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss4.png)
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss5.png)
