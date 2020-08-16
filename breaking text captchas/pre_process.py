@@ -1,7 +1,6 @@
-
-
-
-
+# pre_process.py
+# August 2020
+# Experimenting with extracting character from a captcha image
 
 
 #####################################
@@ -12,7 +11,6 @@
 #   for path in image paths:
 #       load image
 #       get filename
-#       convert image to gray scale
 #       thresh hold the image
 #       find contours
 #       for contour in contours:
@@ -24,51 +22,67 @@
 #
 #####################################
 
+
 from imutils import paths
 import cv2
 import os
 
-dataset = "captchas"
+dataset = "assets"
 HXW = 24
 data = []
 labels = []
 img_paths = sorted(list(paths.list_images(dataset)))
 itr = 0
+
 # Load each original captcha
 for img_path in img_paths:
     filename = img_path.split(os.path.sep)[-1]
+    filename_cpy = filename
     filename = os.path.splitext(filename)[0]
     digits = list(filename)
     # Extract each char from the captcha
     img = cv2.imread(img_path)
+    cv2.imshow(filename_cpy, img)
+    cv2.waitKey(0)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("gray scale", img)
+    cv2.waitKey(0)
     img = cv2.threshold(img, 0, 255,
         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    cv2.imshow("threshold", img)
+    cv2.waitKey(0)
     contours = cv2.findContours(img.copy(),
         cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0]
     digit_boxs = []
-    #cv2.imshow("captcha", img)
-    #cv2.waitKey(0)
-    # Save the char and its corresponding label to lists
     tmp_data = []
     tmp_labels = []
-    for (contour, digit) in zip(contours, digits):
+    boxs = []
+    # Make sure the chars are sorted from left to right
+    for contour in contours:
         (x, y, w, h) = cv2.boundingRect(contour)
+        boxs.append( (x, y, w, h) )
+    boxs = sorted(boxs, key=lambda x: x[0])
+    # Save the char and its corresponding label to lists
+    for (box, digit) in zip(boxs, digits):
+        (x, y, w, h) = box
         cv2.rectangle(img, (x, y), (w, h), (0, 0, 255), 2)
         box = img[y-2:y+h+2, x-2:x+w+2]
         tmp_data.append(box)
         tmp_labels.append(digit)
-        #cv2.imshow(digit, box)
-        #cv2.waitKey(0)
+        cv2.imshow(digit, box)
+        cv2.waitKey(0)
     if len(tmp_data) != 4:
         continue
     for (img, label) in zip(tmp_data, tmp_labels):
         data.append(img)
         labels.append(label)
 
-#print(len(data))
-#print(len(labels))
+print(len(data))
+print(len(labels))
 #for (img, label) in zip(data, labels):
     #cv2.imshow(label, img)
     #cv2.waitKey(0)
+
+
+
