@@ -21,8 +21,8 @@ class Pprocess:
         data = []
         labels = []
         img_paths = sorted(list(paths.list_images(dataset)))
-		random.seed(42)
-		random.shuffle(img_paths)
+        #random.seed(42)
+        random.shuffle(img_paths)
         # Load each original captcha
         for img_path in img_paths:
             filename = img_path.split(os.path.sep)[-1]
@@ -56,33 +56,36 @@ class Pprocess:
                 continue
             # Other regular data pre-processing
             for (img, label) in zip(tmp_data, tmp_labels):
+                if img.shape[0] < 10 or img.shape[1] < 10:
+                    continue
                 img = cv2.resize(img, (HXW, HXW))
-			    img = img_to_array(img)
+                img = img_to_array(img)
                 data.append(img)
                 labels.append(label)
-		data = np.array(data, dtype="float") / 255.0
+        data = np.array(data, dtype="float") / 255.0
+        print(len(data), len(labels))
         return data, labels
 
 
-	def split(data, labels, num_classes):
-		(trainX, testX, trainY, testY) = train_test_split(data,
+    def split(data, labels, num_classes):
+        (trainX, testX, trainY, testY) = train_test_split(data,
 		    labels, test_size=0.20, random_state=42)
-		if num_classes == 2:
-			trainY = to_categorical(trainY, num_classes=num_classes)
-			testY = to_categorical(testY, num_classes=num_classes)
-		return trainX, testX, trainY, testY
+        if num_classes == 2:
+            trainY = to_categorical(trainY, num_classes=num_classes)
+            testY = to_categorical(testY, num_classes=num_classes)
+        return trainX, testX, trainY, testY
 
 
-	def data_aug(aug):
-		if aug == "original":
-			return ImageDataGenerator(rotation_range=30, width_shift_range=0.2,
+    def data_aug(aug):
+        if aug == "original":
+            return ImageDataGenerator(rotation_range=30, width_shift_range=0.2,
             height_shift_range=0.1, shear_range=0.2, zoom_range=0.2, fill_mode="nearest")
-		elif aug == "light":
-			return ImageDataGenerator(rotation_range=15, width_shift_range=0.1,
-			height_shift_range=0.1, shear_range=0.1, zoom_range=0.1, fill_mode="nearest")
-		elif aug == "heavy":
-			return ImageDataGenerator(rotation_range=45, width_shift_range=0.3,
-			height_shift_range=0.2, shear_range=0.3, zoom_range=0.3, fill_mode="nearest")
+        elif aug == "light":
+            return ImageDataGenerator(rotation_range=15, width_shift_range=0.1,
+            height_shift_range=0.1, shear_range=0.1, zoom_range=0.1, fill_mode="nearest")
+        elif aug == "heavy":
+            return ImageDataGenerator(rotation_range=45, width_shift_range=0.3,
+            height_shift_range=0.2, shear_range=0.3, zoom_range=0.3, fill_mode="nearest")
         else:
             return ImageDataGenerator()
 

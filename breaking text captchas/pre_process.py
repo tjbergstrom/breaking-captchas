@@ -79,6 +79,8 @@ for img_path in img_paths:
     if len(tmp_data) != 4:
         continue
     for (img, label) in zip(tmp_data, tmp_labels):
+        if img.shape[0] < 10 or img.shape[1] < 10:
+            continue
         data.append(img)
         labels.append(label)
 
