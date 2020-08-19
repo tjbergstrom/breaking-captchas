@@ -1,7 +1,8 @@
 
 
 
-
+# source ./venv1/bin/activate
+# python3 -W ignore train.py
 
 from sklearn.preprocessing import LabelBinarizer
 from process import Pprocess
@@ -17,12 +18,12 @@ import pickle
 ap = argparse.ArgumentParser()
 ap.add_argument("-s", "--savemodel", type=str, default="model.model")
 ap.add_argument("-p", "--plot", type=str, default="plot.png")
-ap.add_argument("-d", "--dataset", type=str, default="captchas")
+ap.add_argument("-d", "--dataset", type=str, default="train_captchas")
 ap.add_argument("-a", "--aug", type=str, default="original")
 ap.add_argument("-m", "--model", type=str, default="Butterfly_Net")
 ap.add_argument("-o", "--opt", type=str, default="Adam2")
 ap.add_argument("-i", "--imgsz", type=str, default="xs")
-ap.add_argument("-e", "--epochs", type=int, default=10)
+ap.add_argument("-e", "--epochs", type=int, default=20)
 ap.add_argument("-b", "--bs", type=str, default="m")
 ap.add_argument("-k", "--kernelsize", type=int, default=3)
 args = vars(ap.parse_args())
@@ -32,6 +33,7 @@ EPOCHS = args["epochs"]
 BS = Tune.batch_size(args["bs"])
 HXW = Tune.img_size(args["imgsz"])
 k = args["kernelsize"]
+notes = "\n** with adaptive threshold **\n"
 
 
 print("\n...pre-processing the data...\n")
@@ -59,7 +61,7 @@ f.write(pickle.dumps(lb))
 f.close()
 
 print("\n...getting results of training & testing...\n")
-Result.save_info(args["model"], args["opt"], args["aug"], args["imgsz"], EPOCHS, BS, HXW)
+Result.save_info(args["model"], args["opt"], args["aug"], args["imgsz"], EPOCHS, BS, HXW, notes)
 predictions = model.predict(testX, batch_size=BS)
 Result.display_metrix(testX, testY, predictions, model, lb.classes_, aug, BS)
 Result.display_plot((args["plot"]), EPOCHS, H)

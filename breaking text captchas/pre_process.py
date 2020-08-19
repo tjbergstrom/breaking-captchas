@@ -26,34 +26,66 @@
 from imutils import paths
 import cv2
 import os
+from imutils import build_montages
 
-dataset = "captchas"
+dataset = "testing"
 HXW = 24
 data = []
 labels = []
 img_paths = sorted(list(paths.list_images(dataset)))
-img_show = False
+img_show = True
 
 # Load each original captcha
 for img_path in img_paths:
+    mont = []
     filename = img_path.split(os.path.sep)[-1]
     filename_cpy = filename
     filename = os.path.splitext(filename)[0]
     digits = list(filename)
     # Extract each char from the captcha
     img = cv2.imread(img_path)
-    if img_show:
-        cv2.imshow(filename_cpy, img)
-        cv2.waitKey(0)
+    #if img_show:
+        #cv2.imshow(filename_cpy, img)
+        #cv2.waitKey(0)
+
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    if img_show:
-        cv2.imshow("gray scale", img)
-        cv2.waitKey(0)
+    img2 = cv2.merge((img, img, img))
+    mont.append(img2)
+
+
+    i = 0
+    while i < 99:
+        img = cv2.adaptiveThreshold(img, 255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+        img = cv2.threshold(img, 0, 255,
+            cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        i += 1
+
+
+    #if img_show:
+        #cv2.imshow("gray scale", img)
+        #cv2.waitKey(0)
+
+    #img = cv2.threshold(img, 0, 255,
+        #cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    img = cv2.adaptiveThreshold(img, 255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+    img2 = cv2.merge((img, img, img))
+    mont.append(img2)
+
     img = cv2.threshold(img, 0, 255,
         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    if img_show:
-        cv2.imshow("threshold", img)
-        cv2.waitKey(0)
+    img2 = cv2.merge((img, img, img))
+    mont.append(img2)
+
+
+
+
+    #img = cv2.threshold(img,125,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    #if img_show:
+        #cv2.imshow("threshold", img)
+        #cv2.waitKey(0)
     contours = cv2.findContours(img.copy(),
         cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0]
@@ -73,9 +105,11 @@ for img_path in img_paths:
         box = img[y-2:y+h+2, x-2:x+w+2]
         tmp_data.append(box)
         tmp_labels.append(digit)
-        if img_show:
-            cv2.imshow(digit, box)
-            cv2.waitKey(0)
+        box = cv2.merge((box, box, box))
+        mont.append(box)
+        #if img_show:
+            #cv2.imshow(digit, box)
+            #cv2.waitKey(0)
     if len(tmp_data) != 4:
         continue
     for (img, label) in zip(tmp_data, tmp_labels):
@@ -83,6 +117,10 @@ for img_path in img_paths:
             continue
         data.append(img)
         labels.append(label)
+    montage = build_montages(mont, (128, 128), (7, 1))[0]
+    cv2.imshow("", montage)
+    cv2.waitKey(0)
+
 
 print(len(data))
 print(len(labels))

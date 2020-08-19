@@ -2,6 +2,8 @@
 # August 2020
 # Experimenting how to use the trained model to break the captchas
 # And how to translate the output to something useful and meaningful
+#
+# python3 -W ignore classify.py
 
 
 from keras.preprocessing.image import img_to_array
@@ -23,7 +25,7 @@ data = []
 labels = []
 img_paths = sorted(list(paths.list_images(dataset)))
 img_show = False
-model = load_model("model.model")
+model = load_model("model3.model")
 lb = pickle.loads(open("lb.pickle", "rb").read())
 total_correct = 0
 
@@ -77,7 +79,7 @@ for img_path in img_paths:
     if len(tmp_data) != 4:
         continue
     decoded_captcha = ""
-    for (img, label) in zip(tmp_data, tmp_labels):
+    for (img, label, digit) in zip(tmp_data, tmp_labels, digits):
         if img.shape[0] < 10 or img.shape[1] < 10:
             continue
         img = cv2.resize(img, (HXW, HXW))
@@ -103,7 +105,7 @@ for img_path in img_paths:
     print("    Decoded captcha is:", decoded_captcha, "\n")
     #cv2.imshow(decoded_captcha, img_cpy)
     #cv2.waitKey(0)
-    mont = []
+    '''mont = []
     mont2 = []
     mont.append(img_cpy)
     mont2.append(img_cpy)
@@ -116,11 +118,6 @@ for img_path in img_paths:
         #cv2.waitKey(0)
         #cv2.imshow(label, img)
         #cv2.waitKey(0)
-        '''img2 = np.zeros_like(img)
-        img2[:,:,0] = img
-        img2[:,:,1] = img
-        img2[:,:,2] = img
-        img = Image.convert('RGB')'''
         img2 = img
         img = cv2.merge((img, img, img))
         img2 = cv2.merge((img2, img2, img2))
@@ -136,7 +133,7 @@ for img_path in img_paths:
     #cv2.imshow(decoded_captcha, montage)
     #cv2.waitKey(0)
     cv2.imshow(decoded_captcha, img_cpy)
-    cv2.waitKey(0)
+    cv2.waitKey(0)'''
 
 
 accuracy = (total_correct / len(img_paths)) * 100

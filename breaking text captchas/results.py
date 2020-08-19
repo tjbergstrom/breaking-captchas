@@ -60,8 +60,8 @@ class Result:
 		f.write("\n\n\n")
 
 
-	def save_info(model, opt, aug, imgsz, epochs, bs, hxw):
-		label = "model= {}, opt= {}, aug= {}, imgsz {}, epochs= {}, bs= {}, hxw= {}\n".format(model, opt, aug, imgsz, epochs, bs, hxw)
+	def save_info(model, opt, aug, imgsz, epochs, bs, hxw, notes):
+		label = "model= {}, opt= {}, aug= {}, imgsz {}, epochs= {}, bs= {}, hxw= {} {}\n".format(model, opt, aug, imgsz, epochs, bs, hxw, notes)
 		f = open("performance.txt","a+")
 		f.write(label)
 		f.write("\n")
