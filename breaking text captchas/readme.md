@@ -24,7 +24,7 @@ find contours, get label from filename
 
 4. Try it out trying to break / crack / decode input captchas.
 
-Here are some preliminary results after training with only 1,000 images and 10 training epochs:
+Here are some early results:
 
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/screenrecord3.gif)
 
@@ -34,7 +34,7 @@ Here are some preliminary results after training with only 1,000 images and 10 t
 <br>
 
 
-So it's definitely do-able! Fom here I could start over and build a proper model with the 10,000 images that I have, or try
+It's definitely do-able. Fom here I could start over and build a more robust model with more training images, or try
 something more challenging - this model can only break these specific captchas, and I might be more interested in collecting
 other more challenging types.
 
@@ -44,9 +44,9 @@ other more challenging types.
 <br>
 
 
-It also appears that, moving forward, you need to process the images better to extract the text:
+It also appears that you need to process the images better to extract the text:
 
-(the four squares on the right are not just a close up, they are the extracted images created by finding contours, and the model trains with them)
+(the four squares on the right are the extracted images created by finding contours, and the model trains with them)
 
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/screenrecord2.gif)
 
@@ -68,7 +68,7 @@ Extra thresholding improves accuracy just a little:
 
 After training with about 8,000 captchas and testing with almost 2,000 it can break about one out of four captchas.
 The model is at 85% accuracy per each character, which would be about 52% per four characters in a row, if the characters that it gets 
-wrong were evenly distributed. I will keep testing.
+wrong were evenly distributed.
 
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss7.png)
 
