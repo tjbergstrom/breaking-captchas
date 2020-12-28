@@ -15,7 +15,7 @@
 import os
 import argparse
 from imutils import paths
-from extract_captcha import Extract as ec
+from extract_captcha import Extract as E
 from select_thumbs import Select
 
 
@@ -26,18 +26,21 @@ if __name__ == "__main__":
     correct = 0
     total = 0
     for img_path in img_paths:
-        captcha_txt = ec.extract_txt(img_path)
+        captcha_txt = E.extract_txt(img_path)
         if not captcha_txt:
             continue
-        thumbnails = ec.extract_thumbs(img_path)
+        thumbnails = E.extract_thumbs(img_path)
         if len(thumbnails[0]) < 6:
             continue
-        expected_selections = ec.extract_expected(img_path)
+        expected_selections = E.extract_expected(img_path)
+        if len(expected_selections) <= 0:
+            continue
         selections = S.make_selections(captcha_txt, thumbnails)
         cor, tot = S.draw(img_path, thumbnails, selections, expected_selections)
         correct += cor
         total += tot
-    print(f"Overal accuracy: {(correct/total)*100:.2f}%")
+    if total > 0:
+        print(f"Overal accuracy: {(correct/total)*100:.2f}%")
 
 
 
