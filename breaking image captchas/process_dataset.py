@@ -8,7 +8,7 @@
 # And extract all of the thumbnails and save them as individual images
 # Then you can manually put them into the right directories
 # Like, one directory for crosswalks, and another for not_crosswalks
-# And then you can train a model with the two classes
+# And then you can train a model with the two classes, is or isn't ___
 
 
 from extract_captcha import Extract as ec
@@ -17,8 +17,8 @@ import cv2
 
 
 if __name__ == "__main__":
-	label = "traffic_lights"
-	dataset = f"dataset/{label}/original2"
+	label = "crosswalks"
+	dataset = f"dataset/{label}/original"
 	save_dir = f"dataset/{label}/processed"
 	img_paths = sorted(list(paths.list_images(dataset)))
 	itr = 0

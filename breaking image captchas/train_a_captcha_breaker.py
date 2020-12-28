@@ -1,17 +1,22 @@
+# train_a_captcha_breaker.py
+#
+# python3 -W ignore train_a_captcha_breaker.py
+# No argparse, just edit which dataset to use (first line after if name==main)
+#
+# I've done this before, it's just a quick all-in-one process and train a model
+# This is meant to save a model for each captcha label class
+# Like separate models for crosswalk, traffic light, etc
+# Each is trained with a unique dataset for each type
+# So there is an over-head here, but it's quicker if each input captcha only
+# Needs to make a binary classification - each thumbnail is or isn't ___
 
 
-
+from sklearn.metrics import classification_report
 from sklearn.preprocessing import LabelBinarizer
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import img_to_array
 from keras.utils import to_categorical
-from imutils import paths
-import numpy as np
-import random
-import cv2
-import sys
-import os
 from keras.layers.convolutional import MaxPooling2D
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Activation
@@ -20,30 +25,22 @@ from keras.layers.core import Dropout
 from keras.models import Sequential
 from keras.layers.core import Dense
 from keras import backend as K
-from keras.callbacks import LearningRateScheduler
 from keras.optimizers import Adadelta
-from keras.optimizers import RMSprop
 from keras.optimizers import Adam
-from keras.optimizers import SGD
-from collections import OrderedDict
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
 from keras import metrics
+from imutils import paths
 import numpy as np
-import pickle
-import time
-import matplotlib
-matplotlib.use("Agg")
-
+import random
+import cv2
+import sys
+import os
 
 
 def process(captcha, hxw):
 	data = []
 	labels = []
 	img_paths = list(paths.list_images(f"dataset/{captcha}/{captcha}"))
-	img_paths += list(paths.list_images(f"dataset/{captcha}/not_{captcha}"))
+	img_paths += list(paths.list_images(f"dataset/{captcha}/{captcha}_not"))
 	random.seed(79)
 	random.shuffle(img_paths)
 	for img_path in img_paths:
@@ -78,8 +75,8 @@ def data_aug(aug="default"):
 
 
 def optimizer(epochs):
-	#return Adam(lr=0.001, decay=0.001/epochs, amsgrad=True)
-	return Adam(lr=0.001, beta_1=0.9, beta_2=0.999, amsgrad=True)
+	return Adam(lr=0.001, decay=0.001/epochs, amsgrad=True)
+	#return Adam(lr=0.001, beta_1=0.9, beta_2=0.999, amsgrad=True)
 	#return Adadelta(lr=1.0, rho=0.9)
 
 
@@ -135,10 +132,10 @@ class JustaNet:
 
 
 if __name__ == "__main__":
-	captcha = "traffic_lights"
+	captcha = "crosswalks"
 	bs = 16
 	hxw = 24
-	epochs = 24
+	epochs = 42
 	data, labels = process(captcha, hxw)
 	lb = LabelBinarizer()
 	labels = lb.fit_transform(labels)
