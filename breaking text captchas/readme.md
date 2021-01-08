@@ -9,22 +9,16 @@ This has been done before (there's a reason you don't see these much anymore). J
 
 4. Try it out, test it - trying to break or decode input captchas.
 
-5. Go back and try different CV processing and model hypertuning to improve accuracy.
+5. Go back and try different CV processing and model hypertunings to improve accuracy.
 
 6. Implement some testing solutions to evaluate performance. For example, a model might be 85% accurate at predicting individual characters, but only 50% accurate at breaking a given captcha.
 
 <br>
 
-![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/ss8.png)
-
-<br>
-<br>
-
-
 ![alt text](https://raw.githubusercontent.com/tjbergstrom/Breaking-Captchas/master/breaking%20text%20captchas/assets/screenrecord5.gif)
 
 <br>
 
-7. Start over with different types of captchas. To be continued.
+7. Start over with different and more challenging types of captchas. To be continued.
 
 <br>
